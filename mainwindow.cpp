@@ -55,16 +55,22 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_FileOpen_clicked()
 {
     QString FileName;
-    QStack<QTreeWidgetItem*> StackTags;
-    QXmlStreamReader XmlReader;
     FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
-    if (FileName != "")
+    ui->FileFolder->setText(FileName);
+    QFile file(ui->FileFolder->text());
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        ui->FileFolder->setText(FileName);
+        ui->textBrowser->clear();
+        ui->textBrowser->setPlainText("Не удалось открыть файл");
+    }
+    else
+    {
         ui->treeWidget->clear();
         ui->textBrowser->clear();//очистка поля ошибок
-        //QFile file(ui->FileFolder->text());
-        //XmlReader.setDevice(&file);
+        QStack<QTreeWidgetItem*> StackTags;
+        QXmlStreamReader XmlReader;
+        XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
         XmlReader.readNext();
         while (!XmlReader.atEnd())
         {
@@ -95,4 +101,3 @@ void MainWindow::on_FileOpen_clicked()
         }
     }
 }
-
