@@ -5,6 +5,8 @@
 #include <QXmlStreamReader>
 #include <QStack>
 #include <QTextBrowser>
+#include <QFileDialog>
+#include <QFile>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,6 +22,8 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+
+    void on_FileOpen_clicked();
 
 private:
     Ui::MainWindow *ui;
