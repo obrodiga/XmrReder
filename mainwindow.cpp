@@ -73,10 +73,45 @@ void MainWindow::on_FileOpen_clicked()
             ui->textBrowser->clear();//очистка поля ошибок
             QStack<QTreeWidgetItem*> StackTags;
             QXmlStreamReader XmlReader;
+            QString TempStr;
+            //QVector<QString> atributs;
+            QXmlStreamAttributes attrib;
             XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
             XmlReader.readNext();
+
             while (!XmlReader.atEnd())
             {
+                attrib=XmlReader.attributes();
+                TempStr.clear();
+                if (XmlReader.name().toString()=="line")
+                {
+                    if(attrib.hasAttribute("type"))
+                    {
+                        TempStr="type = ";
+                        TempStr += attrib.value("type").toString();
+                    }
+                    if (attrib.hasAttribute("port"))
+                    {
+                        TempStr+="\t port = ";
+                        TempStr += attrib.value("port").toString();
+                    }
+                    if (attrib.hasAttribute("address"))
+                    {
+                        TempStr+="\t address = ";
+                        TempStr += attrib.value("address").toString();
+                    }
+                    if (TempStr!=NULL)
+                    {
+                        TempStr="line  "+TempStr;
+                        ui->textBrowser->append(TempStr);
+                    }
+                }
+
+                /*if (TempStr!=NULL)
+                {
+                    ui->textBrowser->append(TempStr);
+                }*/
+
                 if (XmlReader.isStartElement())
                 {
                     QStringList Tags;
@@ -100,7 +135,7 @@ void MainWindow::on_FileOpen_clicked()
             }
             if (XmlReader.hasError())
             {
-                ui->textBrowser->setPlainText(XmlReader.errorString());//вывод ошибки
+                ui->textBrowser->append(XmlReader.errorString());//вывод ошибки
             }
         }
     }
