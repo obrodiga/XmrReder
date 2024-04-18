@@ -83,6 +83,23 @@ void MainWindow::on_FileOpen_clicked()
             {
                 attrib=XmlReader.attributes();
                 TempStr.clear();
+                if (XmlReader.name().toString()=="logical_device")
+                {
+                    if(attrib.hasAttribute("address"))
+                    {
+                        TempStr="address = ";
+                        TempStr += attrib.value("address").toString();
+                    }
+                    if (attrib.hasAttribute("module"))
+                    {
+                        TempStr+="\t module = ";
+                        TempStr += attrib.value("module").toString();
+                    }
+                    if (TempStr!=NULL)
+                    {
+                        TempStr="logical_device  "+TempStr;
+                    }
+                }
                 if (XmlReader.name().toString()=="line")
                 {
                     if(attrib.hasAttribute("type"))
@@ -103,14 +120,34 @@ void MainWindow::on_FileOpen_clicked()
                     if (TempStr!=NULL)
                     {
                         TempStr="line  "+TempStr;
-                        ui->textBrowser->append(TempStr);
                     }
                 }
-
-                /*if (TempStr!=NULL)
+                if (XmlReader.name().toString()=="object")
+                {
+                    if(attrib.hasAttribute("class_id"))
+                    {
+                        TempStr="class_id = ";
+                        TempStr += attrib.value("class_id").toString();
+                    }
+                    if (attrib.hasAttribute("logical_name"))
+                    {
+                        TempStr+="\t logical_name = ";
+                        TempStr += attrib.value("logical_name").toString();
+                    }
+                    if (attrib.hasAttribute("data_source"))
+                    {
+                        TempStr+="\t data_source = ";
+                        TempStr += attrib.value("data_source").toString();
+                    }
+                    if (TempStr!=NULL)
+                    {
+                        TempStr="object  "+TempStr;
+                    }
+                }
+                if (TempStr!=NULL)
                 {
                     ui->textBrowser->append(TempStr);
-                }*/
+                }
 
                 if (XmlReader.isStartElement())
                 {
