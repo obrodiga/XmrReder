@@ -81,6 +81,7 @@ void MainWindow::on_FileOpen_clicked()
 
             while (!XmlReader.atEnd())
             {
+                bool flagAtr=false;
                 attrib=XmlReader.attributes();
                 TempStr.clear();
                 if (XmlReader.name().toString()=="logical_device")
@@ -146,21 +147,38 @@ void MainWindow::on_FileOpen_clicked()
                 }
                 if (TempStr!=NULL)
                 {
+                    flagAtr=true;
                     ui->textBrowser->append(TempStr);
                 }
 
                 if (XmlReader.isStartElement())
                 {
                     QStringList Tags;
-                    Tags<<XmlReader.name().toString();
+                    if (flagAtr==true)
+                    {
+                        Tags<<TempStr;
+                    }
+                    else
+                    {
+                        Tags<<XmlReader.name().toString();
+                    }
                     QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
+
                     if (StackTags.count()==0)
                     {
                         ui->treeWidget->addTopLevelItem(item);
                     }
                     else
                     {
-                        StackTags.top()->addChild(item);//добавление дочернего элемента
+                        if (flagAtr)
+                        {
+                            StackTags.top()->addChild(item);
+                        }
+                        else
+                        {
+                            StackTags.top()->addChild(item);//добавление дочернего элемента
+                        }
+
                     }
                     StackTags.push_back(item);
                 }
