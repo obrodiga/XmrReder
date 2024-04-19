@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>816</width>
-    <height>656</height>
+    <width>968</width>
+    <height>672</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,7 +25,7 @@
      <rect>
       <x>20</x>
       <y>100</y>
-      <width>771</width>
+      <width>931</width>
       <height>361</height>
      </rect>
     </property>
@@ -33,22 +33,6 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
-     <item row="3" column="0" colspan="4">
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>Постороить дерево тегов</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QTreeWidget" name="treeWidget">
-       <column>
-        <property name="text">
-         <string notr="true">XmlTree</string>
-        </property>
-       </column>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QTextEdit" name="textEdit">
        <property name="sizePolicy">
@@ -73,6 +57,28 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </item>
+     <item row="1" column="1">
+      <widget class="QTreeWidget" name="treeWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <column>
+        <property name="text">
+         <string notr="true">XmlTree</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2">
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Постороить дерево тегов</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget_2">
@@ -80,7 +86,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>771</width>
+      <width>931</width>
       <height>81</height>
      </rect>
     </property>
@@ -109,7 +115,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>470</y>
-      <width>771</width>
+      <width>931</width>
       <height>141</height>
      </rect>
     </property>
@@ -142,7 +148,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>816</width>
+     <width>968</width>
      <height>22</height>
     </rect>
    </property>

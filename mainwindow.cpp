@@ -57,10 +57,12 @@ void MainWindow::on_FileOpen_clicked()
     bool Check=ui->checkBox->checkState();
     if (Check)
     {
+        int itemCount=0;
         QString FileName;
         FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
         ui->FileFolder->setText(FileName);
         QFile file(ui->FileFolder->text());
+        ui->textEdit->clear();
 
         if (!file.open(QFile::ReadOnly | QFile::Text))
         {
@@ -93,7 +95,7 @@ void MainWindow::on_FileOpen_clicked()
                     }
                     if (attrib.hasAttribute("module"))
                     {
-                        TempStr+="\t module = ";
+                        TempStr+="  module = ";
                         TempStr += attrib.value("module").toString();
                     }
                     if (TempStr!=NULL)
@@ -110,12 +112,12 @@ void MainWindow::on_FileOpen_clicked()
                     }
                     if (attrib.hasAttribute("port"))
                     {
-                        TempStr+="\t port = ";
+                        TempStr+="  port = ";
                         TempStr += attrib.value("port").toString();
                     }
                     if (attrib.hasAttribute("address"))
                     {
-                        TempStr+="\t address = ";
+                        TempStr+="  address = ";
                         TempStr += attrib.value("address").toString();
                     }
                     if (TempStr!=NULL)
@@ -132,12 +134,12 @@ void MainWindow::on_FileOpen_clicked()
                     }
                     if (attrib.hasAttribute("logical_name"))
                     {
-                        TempStr+="\t logical_name = ";
+                        TempStr+="  logical_name = ";
                         TempStr += attrib.value("logical_name").toString();
                     }
                     if (attrib.hasAttribute("data_source"))
                     {
-                        TempStr+="\t data_source = ";
+                        TempStr+="  data_source = ";
                         TempStr += attrib.value("data_source").toString();
                     }
                     if (TempStr!=NULL)
@@ -150,18 +152,15 @@ void MainWindow::on_FileOpen_clicked()
                     flagAtr=true;
                     ui->textBrowser->append(TempStr);
                 }
+                else
+                {
+                    TempStr=XmlReader.name().toString();
+                }
 
                 if (XmlReader.isStartElement())
                 {
                     QStringList Tags;
-                    if (flagAtr==true)
-                    {
-                        Tags<<TempStr;
-                    }
-                    else
-                    {
-                        Tags<<XmlReader.name().toString();
-                    }
+                    Tags<<TempStr;
                     QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
 
                     if (StackTags.count()==0)
@@ -181,10 +180,26 @@ void MainWindow::on_FileOpen_clicked()
 
                     }
                     StackTags.push_back(item);
+                    TempStr="<"+TempStr;
+                    for (int i=0; i<itemCount;i++)
+                    {
+                        TempStr="   "+TempStr;
+                    }
+                    TempStr+=">";
+                    ui->textEdit->append(TempStr);
+                    itemCount+=1;
                 }
                 if (XmlReader.isEndElement())//закрывающие элементы
                 {
                     StackTags.pop();//уадление верхнего элемнета из стека
+                    TempStr="<"+TempStr;
+                    for (int i=0; i<itemCount;i++)
+                    {
+                        TempStr="   "+TempStr;
+                    }
+                    TempStr+=">";
+                    ui->textEdit->append(TempStr);
+                    itemCount-=1;
                 }
                 XmlReader.readNext();//переход к следующему элементу
             }
