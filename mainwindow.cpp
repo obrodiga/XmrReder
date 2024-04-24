@@ -13,22 +13,100 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+QString AtributRead (QXmlStreamAttributes elementAtrib, QString nameElement)
+{
+    QString TempStr;
+    TempStr.clear();
+    if (nameElement=="logical_device")
+    {
+        if(elementAtrib.hasAttribute("address"))
+        {
+            TempStr="address='";
+            TempStr=TempStr+ elementAtrib.value("address").toString()+"'";
+        }
+        if (elementAtrib.hasAttribute("module"))
+        {
+            TempStr+=" module='";
+            TempStr=TempStr+ elementAtrib.value("module").toString()+"'";
+        }
+        if (TempStr!=NULL)
+        {
+            TempStr="logical_device "+TempStr;
+        }
+    }
+    if (nameElement=="line")
+    {
+        if(elementAtrib.hasAttribute("type"))
+        {
+            TempStr="type='";
+            TempStr=TempStr+elementAtrib.value("type").toString()+"'";
+        }
+        if (elementAtrib.hasAttribute("port"))
+        {
+            TempStr+=" port='";
+                TempStr=TempStr+elementAtrib.value("port").toString()+"'";
+        }
+        if (elementAtrib.hasAttribute("address"))
+        {
+            TempStr+=" address='";
+            TempStr=TempStr+elementAtrib.value("address").toString()+"'";
+        }
+        if (TempStr!=NULL)
+        {
+            TempStr="line  "+TempStr;
+        }
+    }
+    if (nameElement=="object")
+    {
+        if(elementAtrib.hasAttribute("class_id"))
+        {
+            TempStr="class_id='";
+            TempStr=TempStr+ elementAtrib.value("class_id").toString()+"'";
+        }
+        if (elementAtrib.hasAttribute("logical_name"))
+        {
+            TempStr+=" logical_name='";
+            TempStr=TempStr+elementAtrib.value("logical_name").toString()+"'";
+        }
+        if (elementAtrib.hasAttribute("data_source"))
+        {
+            TempStr+=" data_source='";
+            TempStr=TempStr+elementAtrib.value("data_source").toString()+"'";
+        }
+        if (TempStr!=NULL)
+        {
+            TempStr="object  "+TempStr;
+        }
+    }
+    if (TempStr==NULL)
+    {
+        TempStr=nameElement;
+    }
+    return TempStr;
+}
 void MainWindow::on_pushButton_clicked()
 {
     QXmlStreamReader XmlReader;//элемент класса для работы с XML файлами
     XmlReader.addData(ui->textEdit->toPlainText());//получение введённых данных
     QStack<QTreeWidgetItem*> StackTags; //список элементов для создания иерархии
+    QXmlStreamAttributes attrib;
+    QString TempStr;
 
     ui->treeWidget->clear();//очистка поля для вывода тегов
     ui->textBrowser->clear();
 
+    XmlReader.readNext();
     while (!XmlReader.atEnd())//перебор всех элементов
     {
+        attrib=XmlReader.attributes();
+        TempStr.clear();
+        TempStr=AtributRead(attrib, XmlReader.name().toString());
+
+
         if (XmlReader.isStartElement())//проверка на открывающий элемент
         {
             QStringList Tags;
-            Tags<<XmlReader.name().toString();//получение имени текущего элемента
+            Tags<<TempStr;//получение имени текущего элемента
             QTreeWidgetItem* item = new QTreeWidgetItem(Tags); //создание элементов для последующего добавления в дерево
             if (StackTags.count()==0)
             {
@@ -83,101 +161,24 @@ void MainWindow::on_FileOpen_clicked()
 
             while (!XmlReader.atEnd())
             {
-                bool flagAtr=false;
                 attrib=XmlReader.attributes();
                 TempStr.clear();
-                if (XmlReader.name().toString()=="logical_device")
-                {
-                    if(attrib.hasAttribute("address"))
-                    {
-                        TempStr="address = ";
-                        TempStr += attrib.value("address").toString();
-                    }
-                    if (attrib.hasAttribute("module"))
-                    {
-                        TempStr+="  module = ";
-                        TempStr += attrib.value("module").toString();
-                    }
-                    if (TempStr!=NULL)
-                    {
-                        TempStr="logical_device  "+TempStr;
-                    }
-                }
-                if (XmlReader.name().toString()=="line")
-                {
-                    if(attrib.hasAttribute("type"))
-                    {
-                        TempStr="type = ";
-                        TempStr += attrib.value("type").toString();
-                    }
-                    if (attrib.hasAttribute("port"))
-                    {
-                        TempStr+="  port = ";
-                        TempStr += attrib.value("port").toString();
-                    }
-                    if (attrib.hasAttribute("address"))
-                    {
-                        TempStr+="  address = ";
-                        TempStr += attrib.value("address").toString();
-                    }
-                    if (TempStr!=NULL)
-                    {
-                        TempStr="line  "+TempStr;
-                    }
-                }
-                if (XmlReader.name().toString()=="object")
-                {
-                    if(attrib.hasAttribute("class_id"))
-                    {
-                        TempStr="class_id = ";
-                        TempStr += attrib.value("class_id").toString();
-                    }
-                    if (attrib.hasAttribute("logical_name"))
-                    {
-                        TempStr+="  logical_name = ";
-                        TempStr += attrib.value("logical_name").toString();
-                    }
-                    if (attrib.hasAttribute("data_source"))
-                    {
-                        TempStr+="  data_source = ";
-                        TempStr += attrib.value("data_source").toString();
-                    }
-                    if (TempStr!=NULL)
-                    {
-                        TempStr="object  "+TempStr;
-                    }
-                }
-                if (TempStr!=NULL)
-                {
-                    flagAtr=true;
-                    ui->textBrowser->append(TempStr);
-                }
-                else
-                {
-                    TempStr=XmlReader.name().toString();
-                }
+                TempStr=AtributRead(attrib, XmlReader.name().toString());
+                //ui->textBrowser->append(TempStr);
 
                 if (XmlReader.isStartElement())
                 {
                     QStringList Tags;
                     Tags<<TempStr;
                     QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
-
+                    itemCount++;
                     if (StackTags.count()==0)
                     {
                         ui->treeWidget->addTopLevelItem(item);
                     }
                     else
                     {
-                        if (flagAtr)
-                        {
-                            StackTags.top()->addChild(item);
-                        }
-                        else
-                        {
-                            StackTags.top()->addChild(item);//добавление дочернего элемента
-                        }
-
+                        StackTags.top()->addChild(item);
                     }
                     StackTags.push_back(item);
                     TempStr="<"+TempStr;
@@ -187,25 +188,25 @@ void MainWindow::on_FileOpen_clicked()
                     }
                     TempStr+=">";
                     ui->textEdit->append(TempStr);
-                    itemCount+=1;
                 }
                 if (XmlReader.isEndElement())//закрывающие элементы
                 {
                     StackTags.pop();//уадление верхнего элемнета из стека
-                    TempStr="<"+TempStr;
+                    TempStr="</"+TempStr;
                     for (int i=0; i<itemCount;i++)
                     {
                         TempStr="   "+TempStr;
                     }
                     TempStr+=">";
                     ui->textEdit->append(TempStr);
-                    itemCount-=1;
+                    itemCount--;
                 }
                 XmlReader.readNext();//переход к следующему элементу
             }
             if (XmlReader.hasError())
             {
                 ui->textBrowser->append(XmlReader.errorString());//вывод ошибки
+                ui->textBrowser->append(TempStr);
             }
         }
     }
