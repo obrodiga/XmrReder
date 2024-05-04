@@ -104,6 +104,13 @@ p, li { white-space: pre-wrap; }
      <item row="1" column="1">
       <widget class="QPushButton" name="FileOpen">
        <property name="text">
+        <string>Считать</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="FileSave">
+       <property name="text">
         <string>PushButton</string>
        </property>
       </widget>
