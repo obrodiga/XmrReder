@@ -13,8 +13,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-<<<<<<< Updated upstream
-=======
 QString AtributRead (QXmlStreamAttributes elementAtrib, QString nameElement)
 {
     QString TempStr;
@@ -74,21 +72,21 @@ QString AtributRead (QXmlStreamAttributes elementAtrib, QString nameElement)
     }
     return TempStr;
 }
->>>>>>> Stashed changes
 
 void MainWindow::on_pushButton_clicked()
 {
     QXmlStreamReader XmlReader;//элемент класса для работы с XML файлами
     XmlReader.addData(ui->textEdit->toPlainText());//получение введённых данных
     QStack<QTreeWidgetItem*> StackTags; //список элементов для создания иерархии
+    QXmlStreamAttributes attrib;
+    QString TempStr;
 
     ui->treeWidget->clear();//очистка поля для вывода тегов
     ui->textBrowser->clear();
 
-    while (!XmlReader.atEnd())//перебор всех элементов
+    XmlReader.readNext();
+    while (!XmlReader.atEnd())//перебор всех элеменов
     {
-<<<<<<< Updated upstream
-=======
         attrib=XmlReader.attributes();
         TempStr.clear();
         TempStr=AtributRead(attrib, XmlReader.name().toString());
@@ -96,9 +94,6 @@ void MainWindow::on_pushButton_clicked()
         {
             TempStr=XmlReader.name().toString();
         }
-
-
->>>>>>> Stashed changes
         if (XmlReader.isStartElement())//проверка на открывающий элемент
         {
             QStringList Tags;
@@ -144,7 +139,6 @@ void MainWindow::on_FileOpen_clicked()
         else
         {
             ui->treeWidget->clear();
-            ui->textBrowser->clear();
             ui->textEdit->clear();
             QStack<QTreeWidgetItem*> StackTags;
             QXmlStreamReader XmlReader;
@@ -155,91 +149,18 @@ void MainWindow::on_FileOpen_clicked()
 
             while (!XmlReader.atEnd())
             {
-                bool flagAtr=false;
                 attrib=XmlReader.attributes();
                 TempStr.clear();
-<<<<<<< Updated upstream
-                if (XmlReader.name().toString()=="logical_device")
-                {
-                    if(attrib.hasAttribute("address"))
-                    {
-                        TempStr="address = ";
-                        TempStr += attrib.value("address").toString();
-                    }
-                    if (attrib.hasAttribute("module"))
-                    {
-                        TempStr+="  module = ";
-                        TempStr += attrib.value("module").toString();
-                    }
-                    if (TempStr!=NULL)
-                    {
-                        TempStr="logical_device  "+TempStr;
-                    }
-                }
-                if (XmlReader.name().toString()=="line")
-                {
-                    if(attrib.hasAttribute("type"))
-                    {
-                        TempStr="type = ";
-                        TempStr += attrib.value("type").toString();
-                    }
-                    if (attrib.hasAttribute("port"))
-                    {
-                        TempStr+="  port = ";
-                        TempStr += attrib.value("port").toString();
-                    }
-                    if (attrib.hasAttribute("address"))
-                    {
-                        TempStr+="  address = ";
-                        TempStr += attrib.value("address").toString();
-                    }
-                    if (TempStr!=NULL)
-                    {
-                        TempStr="line  "+TempStr;
-                    }
-                }
-                if (XmlReader.name().toString()=="object")
-                {
-                    if(attrib.hasAttribute("class_id"))
-                    {
-                        TempStr="class_id = ";
-                        TempStr += attrib.value("class_id").toString();
-                    }
-                    if (attrib.hasAttribute("logical_name"))
-                    {
-                        TempStr+="  logical_name = ";
-                        TempStr += attrib.value("logical_name").toString();
-                    }
-                    if (attrib.hasAttribute("data_source"))
-                    {
-                        TempStr+="  data_source = ";
-                        TempStr += attrib.value("data_source").toString();
-                    }
-                    if (TempStr!=NULL)
-                    {
-                        TempStr="object  "+TempStr;
-                    }
-                }
-                if (TempStr!=NULL)
-                {
-                    flagAtr=true;
-                    ui->textBrowser->append(TempStr);
-                }
-                else
-                {
-                    TempStr=XmlReader.name().toString();
-                }
-=======
                 TempStr=AtributRead(attrib, XmlReader.name().toString());
-                if (TempStr==NULL)
+                if (TempStr.isEmpty())
                 {
                     TempStr=XmlReader.name().toString();
                 }
                 ui->textBrowser->append(TempStr);
->>>>>>> Stashed changes
 
                 if (XmlReader.isStartElement())
                 {
+                    itemCount++;
                     QStringList Tags;
                     Tags<<TempStr;
                     QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
@@ -250,15 +171,7 @@ void MainWindow::on_FileOpen_clicked()
                     }
                     else
                     {
-                        if (flagAtr)
-                        {
-                            StackTags.top()->addChild(item);
-                        }
-                        else
-                        {
-                            StackTags.top()->addChild(item);//добавление дочернего элемента
-                        }
-
+                        StackTags.top()->addChild(item);
                     }
                     StackTags.push_back(item);
                     TempStr="<"+TempStr;
@@ -268,19 +181,18 @@ void MainWindow::on_FileOpen_clicked()
                     }
                     TempStr+=">";
                     ui->textEdit->append(TempStr);
-                    itemCount+=1;
                 }
-                if (XmlReader.isEndElement())//закрывающие элементы
+                if (XmlReader.isEndElement())
                 {
                     StackTags.pop();//уадление верхнего элемнета из стека
-                    TempStr="<"+TempStr;
+                    TempStr="</"+TempStr;
                     for (int i=0; i<itemCount;i++)
                     {
                         TempStr="   "+TempStr;
                     }
                     TempStr+=">";
                     ui->textEdit->append(TempStr);
-                    itemCount-=1;
+                    itemCount--;
                 }
                 XmlReader.readNext();//переход к следующему элементу
             }
@@ -337,7 +249,7 @@ void MainWindow::on_FileSave_clicked()
                 string.remove(QChar(' '));//удалить пробелы
 
                 XmlWriter.writeStartElement(nameElement);
-                while (!string.isEmpty())
+                while (string!=NULL)
                 {
                     index=string.indexOf("'", index=0);
                     tempStringAN=string.left(index-1);//имя атрибута
