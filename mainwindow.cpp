@@ -238,30 +238,35 @@ void MainWindow::on_FileSave_clicked()
         nameElement=XmlReader.name().toString();
         if (XmlReader.isStartElement())
         {
-            if (string==NULL)
+            if (string.isEmpty())
             {
                 XmlWriter.writeStartElement(nameElement);
             }
             else
             {
-                index=string.indexOf(" ", index=0);
-                string.remove(0, index-1);//удалить имя тега
+                index = string.indexOf(" ", index = 0);
+                string.remove(0, index);//удалить имя тега
                 string.remove(QChar(' '));//удалить пробелы
 
                 XmlWriter.writeStartElement(nameElement);
-                while (string!=NULL)
+                while (!string.isEmpty())
                 {
-                    index=string.indexOf("'", index=0);
-                    tempStringAN=string.left(index-1);//имя атрибута
-                    string.remove(0, index);//удаление названия атрибута
-                    index=string.indexOf("'", index=0);
-                    tempStringAV=string.left(index);//значение атрибута
-                    string.remove(0, index);//удаление названия атрибута
+                    index=0;
+                    index = string.indexOf("'", index);
+                    index--;
+                    tempStringAN = string.left(index);//сохраннение имя атрибута
+                    index+=2;
+                    string.remove(0, index);//удаление названия атрибута и открывающую '
+                    index=0;
+                    index = string.indexOf("'", index);
+                    tempStringAV = string.left(index);//сохранение значения атрибута
+                    index++;
+                    string.remove(0, index);//удаление значения атрибута
                     XmlWriter.writeAttribute(tempStringAN, tempStringAV);//записать атрибут и значение
                 }
             }
         }
-        else
+        if (XmlReader.isEndElement())
         {
             XmlWriter.writeEndElement();
         }
