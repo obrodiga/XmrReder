@@ -24,7 +24,7 @@ QString AtributRead (QXmlStreamAttributes elementAtrib, QString nameElement)
         {
             TempStr="address=";
             TempStr.push_back(kav);
-            TempStr+=TempStr+elementAtrib.value("address").toString();
+            TempStr+=elementAtrib.value("address").toString();
             TempStr.push_back(kav);
         }
         if (elementAtrib.hasAttribute("module"))
@@ -60,6 +60,13 @@ QString AtributRead (QXmlStreamAttributes elementAtrib, QString nameElement)
             TempStr=TempStr+" address=";
             TempStr.push_back(kav);
             TempStr+=elementAtrib.value("address").toString();
+            TempStr.push_back(kav);
+        }
+        if (elementAtrib.hasAttribute("baudrate"))
+        {
+            TempStr=TempStr+" baudrate=";
+            TempStr.push_back(kav);
+            TempStr+=elementAtrib.value("baudrate").toString();
             TempStr.push_back(kav);
         }
         if (TempStr!=NULL)
@@ -264,21 +271,17 @@ void MainWindow::on_FileSave_clicked()
         {
             atributs=XmlReader.attributes();
             nameElement=XmlReader.name().toString();
+            string.clear();
             string=AtributRead(atributs, nameElement);
             if (XmlReader.isStartElement())
             {
-                if (string==NULL)
-                {
-                    XmlWriter.writeStartElement(nameElement);
-
-                }
-                if (string.size()>1)
+                XmlWriter.writeStartElement(nameElement);
+                if (!string.isEmpty())
                 {
                     index = string.indexOf(" ", index = 0);
                     string.remove(0, index);//удалить имя тега
-                    string.remove(QChar(' '));//удалить пробелы
+                    string.remove(QChar(' '), Qt::CaseInsensitive);//удалить пробелы
 
-                    XmlWriter.writeStartElement(nameElement);
                     while (!string.isEmpty())
                     {
                         tempStringAN.clear();
@@ -305,6 +308,9 @@ void MainWindow::on_FileSave_clicked()
             XmlReader.readNext();
         }
         XmlWriter.writeEndDocument();
+        if (XmlReader.hasError())
+        {
+            ui->textBrowser->setText(XmlReader.errorString());
+        }
     }
 }
-
