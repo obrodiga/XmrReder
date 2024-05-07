@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QVector>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
