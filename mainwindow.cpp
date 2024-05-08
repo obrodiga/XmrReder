@@ -155,89 +155,96 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_FileOpen_clicked()
 {
-    bool Check=ui->checkBox->checkState();
-    if (Check)
+    int itemCount=0;
+    QString FileName;
+    FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
+    ui->FileFolder->setText(FileName);
+    QFile file(ui->FileFolder->text());
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        int itemCount=0;
-        QString FileName;
-        FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
-        ui->FileFolder->setText(FileName);
-        QFile file(ui->FileFolder->text());
-
-        if (!file.open(QFile::ReadOnly | QFile::Text))
-        {
-            ui->textBrowser->setPlainText("Не удалось открыть файл");
-        }
-        else
-        {
-            ui->treeWidget->clear();
-            ui->textEdit->clear();
-            QStack<QTreeWidgetItem*> StackTags;
-            QXmlStreamReader XmlReader;
-            QString TempStr;
-            QXmlStreamAttributes attrib;
-            XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
-            XmlReader.readNext();
-
-            while (!XmlReader.atEnd())
-            {
-                attrib=XmlReader.attributes();
-                TempStr.clear();
-                TempStr=AtributRead(attrib, XmlReader.name().toString());
-                if (TempStr.isEmpty())
-                {
-                    TempStr=XmlReader.name().toString();
-                }
-                ui->textBrowser->append(TempStr);
-
-                if (XmlReader.isStartElement())
-                {
-                    itemCount++;
-                    QStringList Tags;
-                    Tags<<TempStr;
-                    QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
-
-                    if (StackTags.count()==0)
-                    {
-                        ui->treeWidget->addTopLevelItem(item);
-                    }
-                    else
-                    {
-                        StackTags.top()->addChild(item);
-                    }
-                    StackTags.push_back(item);
-                    TempStr="<"+TempStr;
-                    for (int i=0; i<itemCount;i++)
-                    {
-                        TempStr="   "+TempStr;
-                    }
-                    TempStr+=">";
-                    ui->textEdit->append(TempStr);
-                }
-                if (XmlReader.isEndElement())
-                {
-                    StackTags.pop();//уадление верхнего элемнета из стека
-                    TempStr="</"+TempStr;
-                    for (int i=0; i<itemCount;i++)
-                    {
-                        TempStr="   "+TempStr;
-                    }
-                    TempStr+=">";
-                    ui->textEdit->append(TempStr);
-                    itemCount--;
-                }
-                XmlReader.readNext();//переход к следующему элементу
-            }
-            if (XmlReader.hasError())
-            {
-                ui->textBrowser->append(XmlReader.errorString());//вывод ошибки
-            }
-        }
+        ui->textBrowser->setPlainText("Не удалось открыть файл");
     }
     else
     {
-        ui->FileFolder->clear();
-        ui->FileFolder->setText("Для использования локальных файлов отметьте данную настройку");
+        ui->treeWidget->clear();
+        ui->textEdit->clear();
+        QStack<QTreeWidgetItem*> StackTags;
+        QXmlStreamReader XmlReader;
+        QString TempStr;
+        QXmlStreamAttributes attrib;
+        XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
+        XmlReader.readNext();
+
+        while (!XmlReader.atEnd())
+        {
+            attrib=XmlReader.attributes();
+            TempStr.clear();
+            TempStr=AtributRead(attrib, XmlReader.name().toString());
+            if (TempStr.isEmpty())
+            {
+                TempStr=XmlReader.name().toString();
+            }
+
+            if (XmlReader.isStartElement())
+            {
+                itemCount++;
+                QStringList Tags;
+                Tags<<TempStr;
+                QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
+
+                if (StackTags.count()==0)
+                {
+                    ui->treeWidget->addTopLevelItem(item);
+                    Server NewServer;
+                    m_servers.push_back(NewServer);
+                }
+                else
+                {
+                    StackTags.top()->addChild(item);
+                    QString Name=StackTags.top()->text(0);//получить именя тега можно XmlReader.name().toString(), это QString и при необходимости можно вынести в отдельную переменную
+                    if (Name=="server")
+                    {
+                        m_lastserver=Servers[Server.size()-1];
+                    }
+                    if (Name=="lines")
+                    {
+                        Line NewLine;
+                        m_lastserver.m_lines.push_back(NewLine);
+                    }
+                    if (Name=="logical_devices")
+                    {
+                        LogicalDevices newLDevice;
+                        m_lastserver.m_devaices.push_back(newLDevice);
+                    }
+                }
+                StackTags.push_back(item);
+                TempStr="<"+TempStr;
+                for (int i=0; i<itemCount;i++)
+                {
+                    TempStr="   "+TempStr;
+                }
+                TempStr+=">";
+                ui->textEdit->append(TempStr);
+            }
+            if (XmlReader.isEndElement())
+            {
+                StackTags.pop();//уадление верхнего элемнета из стека
+                TempStr="</"+TempStr;
+                for (int i=0; i<itemCount;i++)
+                {
+                    TempStr="   "+TempStr;
+                }
+                TempStr+=">";
+                ui->textEdit->append(TempStr);
+                itemCount--;
+            }
+            XmlReader.readNext();//переход к следующему элементу
+        }
+        if (XmlReader.hasError())
+        {
+            ui->textBrowser->append(XmlReader.errorString());//вывод ошибки
+        }
     }
 }
 

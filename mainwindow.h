@@ -11,6 +11,8 @@
 #include <QFile>
 #include <QVector>
 #include <QDebug>
+#include <struct.h>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +25,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    Servers m_servers;
+    Server m_lastserver;
+
 
 private slots:
     void on_pushButton_clicked();

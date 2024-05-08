@@ -91,27 +91,20 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="1" column="0">
+     <item row="0" column="0">
       <widget class="QLineEdit" name="FileFolder"/>
      </item>
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="checkBox">
-       <property name="text">
-        <string>Нажмите для использования файлов на ПК</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="FileOpen">
+      <widget class="QPushButton" name="FileSave">
        <property name="text">
-        <string>Считать</string>
+        <string>Запись</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPushButton" name="FileSave">
+      <widget class="QPushButton" name="FileOpen">
        <property name="text">
-        <string>PushButton</string>
+        <string>Считать</string>
        </property>
       </widget>
      </item>
