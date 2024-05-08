@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include <QXmlStreamAttributes>
 #include <QStack>
 #include <QTextBrowser>
@@ -26,6 +27,8 @@ private slots:
     void on_pushButton_clicked();
 
     void on_FileOpen_clicked();
+
+    void on_FileSave_clicked();
 
 private:
     Ui::MainWindow *ui;
