@@ -197,7 +197,7 @@ void MainWindow::on_FileOpen_clicked()
                 {
                     ui->treeWidget->addTopLevelItem(item);
                     Server NewServer;
-                    m_servers.push_back(NewServer);
+                    m_servers.m_Servers.push_back(NewServer);
                 }
                 else
                 {
@@ -205,17 +205,17 @@ void MainWindow::on_FileOpen_clicked()
                     QString Name=StackTags.top()->text(0);//получить именя тега можно XmlReader.name().toString(), это QString и при необходимости можно вынести в отдельную переменную
                     if (Name=="server")
                     {
-                        m_lastserver=Servers[Server.size()-1];
+                        m_lastserver=m_servers.m_Servers[m_servers.m_Servers.size()-1];
                     }
                     if (Name=="lines")
                     {
                         Line NewLine;
-                        m_lastserver.m_lines.push_back(NewLine);
+                        m_lastserver.m_lines.m_lines.push_back(NewLine);
                     }
                     if (Name=="logical_devices")
                     {
-                        LogicalDevices newLDevice;
-                        m_lastserver.m_devaices.push_back(newLDevice);
+                        LogicalDevice newLDevice;
+                        m_lastserver.m_devaices.m_logicaldevaice.push_back(newLDevice);
                     }
                 }
                 StackTags.push_back(item);
