@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //filesaver *fileSaver;
+    fileSaver=new filesaver;
+    connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
 }
 
 MainWindow::~MainWindow()
@@ -251,6 +254,11 @@ void MainWindow::on_FileOpen_clicked()
 
 void MainWindow::on_FileSave_clicked()
 {
+    QString FileName;
+
+    fileSaver->setModal(true);
+    fileSaver->exec();
+    FileName=(ui->FileFolder->text());
     QFile fileWrite(ui->FileFolder->text());
     QXmlStreamReader XmlReader;
     QXmlStreamAttributes atributs;
@@ -321,3 +329,20 @@ void MainWindow::on_FileSave_clicked()
         }
     }
 }
+
+void MainWindow::on_closeButton_triggered()
+{
+    QApplication::quit();
+}
+
+
+void MainWindow::on_infoButton_triggered()
+{
+    QMessageBox::information(this, "Информация о разработчках", "Создана в среде разработке Qt v5.15.5\nРазработана в ИРИТ-РТФ\nСоздана Шлыковым О.П. и Некрасовым Н.С.\nВерсия v0.5");
+}
+
+void MainWindow::newFileFolder(QString FileFolder)
+{
+    ui->FileFolder->setText(FileFolder);
+}
+
