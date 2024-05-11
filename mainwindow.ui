@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>968</width>
-    <height>672</height>
+    <height>634</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,7 +24,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>100</y>
+      <y>70</y>
       <width>931</width>
       <height>361</height>
      </rect>
@@ -85,7 +85,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>40</y>
+      <y>10</y>
       <width>931</width>
       <height>51</height>
      </rect>
@@ -94,7 +94,7 @@ p, li { white-space: pre-wrap; }
      <item row="1" column="0">
       <widget class="QLineEdit" name="FileFolder">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -118,7 +118,7 @@ p, li { white-space: pre-wrap; }
      <item row="0" column="0">
       <widget class="QLabel" name="label_2">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -134,7 +134,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
+      <y>440</y>
       <width>931</width>
       <height>141</height>
      </rect>

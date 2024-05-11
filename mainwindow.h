@@ -43,6 +43,8 @@ private slots:
 
     void on_infoButton_triggered();
 
+    void on_gideButton_triggered();
+
 private:
     Ui::MainWindow *ui;
     filesaver *fileSaver;

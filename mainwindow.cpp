@@ -338,11 +338,37 @@ void MainWindow::on_closeButton_triggered()
 
 void MainWindow::on_infoButton_triggered()
 {
-    QMessageBox::information(this, "Информация о разработчках", "Создана в среде разработке Qt v5.15.5\nРазработана в ИРИТ-РТФ\nСоздана Шлыковым О.П. и Некрасовым Н.С.\nВерсия v0.5");
+    QFile file(":/info/about.txt");
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        ui->textBrowser->setPlainText("Не удалось открыть файл 'Информация о разработчках'");
+    }
+    else
+    {
+        QByteArray data;
+        data=file.readAll();
+        QMessageBox::information(this, "Информация о разработчках", data);
+    }
 }
 
 void MainWindow::newFileFolder(QString FileFolder)
 {
     ui->FileFolder->setText(FileFolder);
+}
+
+
+void MainWindow::on_gideButton_triggered()
+{
+    QFile file(":/info/guid.txt");
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        ui->textBrowser->setPlainText("Не удалось открыть файл 'Руководство по использованию программы'");
+    }
+    else
+    {
+        QByteArray data;
+        data=file.readAll();
+        QMessageBox::information(this, "Руководство по использованию программы", data);
+    }
 }
 
