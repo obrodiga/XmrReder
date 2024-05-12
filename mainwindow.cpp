@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //filesaver *fileSaver;
+    this->setWindowTitle("Построение дерева тегов");
     fileSaver=new filesaver;
     connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
 }
@@ -347,7 +347,7 @@ void MainWindow::on_infoButton_triggered()
     {
         QByteArray data;
         data=file.readAll();
-        QMessageBox::information(this, "Информация о разработчках", data);
+        QMessageBox::question(this, "Информация о разработчках", data);
     }
 }
 

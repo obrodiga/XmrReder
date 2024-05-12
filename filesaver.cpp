@@ -6,6 +6,7 @@ filesaver::filesaver(QWidget *parent) :
     ui(new Ui::filesaver)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Сохранение файла");
 }
 
 filesaver::~filesaver()
