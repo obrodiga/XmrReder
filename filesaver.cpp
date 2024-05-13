@@ -22,8 +22,7 @@ void filesaver::on_yesButton_clicked()
 
 void filesaver::on_noButton_clicked()
 {
-    QString FileName;
-    FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
+    QString FileName= QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));;
     emit newFileName(FileName);
     QDialog::close();
 }
