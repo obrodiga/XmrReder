@@ -7,14 +7,15 @@
 #include <QXmlStreamAttributes>
 #include <QStack>
 #include <QTextBrowser>
-//#include <QFileDialog>
 #include <QFile>
 #include <QVector>
 #include <QDebug>
 #include <struct.h>
 #include <QMessageBox>
+#include <QAbstractItemView>
 
 #include <filesaver.h>
+#include <edit_line.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -48,8 +49,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
     filesaver *fileSaver;
+    edit_line *editLine;
 
 public slots:
     void newFileFolder(QString FileFolder);
+    void twoDoubleClicked(const QModelIndex &index);
 };
 #endif // MAINWINDOW_H

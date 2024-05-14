@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setWindowTitle("Построение дерева тегов");
     fileSaver = new filesaver;
     connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
+    editLine=new edit_line;
+    connect(ui->treeWidget, &QAbstractItemView::doubleClicked, this, &MainWindow::twoDoubleClicked);
 }
 
 MainWindow::~MainWindow()
@@ -177,25 +179,24 @@ void MainWindow::on_FileOpen_clicked()
                 {
                     ui->treeWidget->addTopLevelItem(item);
                     Server NewServer;
-                    m_servers.Servers.push_back(NewServer);
+                    m_servers.push_back(NewServer);
                 }
                 else
                 {
                     StackTags.top()->addChild(item);
-                    //QString Name=StackTags.top()->text(0);//получить именя тега можно XmlReader.name().toString(), это QString и при необходимости можно вынести в отдельную переменную
                     if (nameElement == "server")
                     {
-                        m_lastserver = m_servers.Servers[m_servers.Servers.size() - 1];
+                        m_lastserver = m_servers[m_servers.size() - 1];
                     }
                     if (nameElement == "lines")
                     {
                         Line NewLine;
-                        m_lastserver.m_lines.Lines.push_back(NewLine);
+                        m_lastserver.m_lines.push_back(NewLine);
                     }
                     if (nameElement == "logical_devices")
                     {
                         LogicalDevice newLDevice;
-                        m_lastserver.Devaices.Logicaldevaice.push_back(newLDevice);
+                        m_lastserver.Devaices.push_back(newLDevice);
                     }
                 }
                 StackTags.push_back(item);
@@ -323,6 +324,15 @@ void MainWindow::on_infoButton_triggered()
 void MainWindow::newFileFolder(QString FileFolder)
 {
     ui->FileFolder->setText(FileFolder);
+}
+
+void MainWindow::twoDoubleClicked(const QModelIndex &index)
+{
+    if ((index.data().toString().contains("line")==true)&&(index.data().toString().contains("lines")==false))
+    {
+        editLine->setModal(true);
+        editLine->exec();
+    }
 }
 
 
