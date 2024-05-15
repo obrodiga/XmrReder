@@ -20,6 +20,10 @@ private:
 
 public slots:
     void SetStr(QString NewStr);
+
+signals:
+    void newLine(QString);
+
 private slots:
     void on_pushButton_2_clicked();
     void on_discasCange_clicked();

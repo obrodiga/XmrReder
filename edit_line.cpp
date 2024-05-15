@@ -91,6 +91,7 @@ void edit_line::on_discasCange_clicked()
         newLineValue=newLineValue+" baudrate="+KavStr+temp+KavStr;
     }
     ui->label->setText(newLineValue);
+    emit newLine(newLineValue);
     //QDialog::close();
 }
 

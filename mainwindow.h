@@ -55,5 +55,6 @@ private:
 public slots:
     void newFileFolder(QString FileFolder);
     void twoDoubleClicked(const QModelIndex &index);
+    void newTypeString(QString TypeLine);
 };
 #endif // MAINWINDOW_H

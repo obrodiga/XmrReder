@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
     editLine=new edit_line;
     connect(ui->treeWidget, &QAbstractItemView::doubleClicked, this, &MainWindow::twoDoubleClicked);
+    connect(editLine, &edit_line::newLine, this, &MainWindow::newTypeString);
 }
 
 MainWindow::~MainWindow()
@@ -334,6 +335,11 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
         editLine->open();
         editLine->SetStr(index.data().toString());
     }
+}
+
+void MainWindow::newTypeString(QString TypeLine)
+{
+    ui->textBrowser->append(TypeLine);
 }
 
 
