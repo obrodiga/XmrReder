@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::edit_line *ui;
+
+public slots:
+    void SetStr(QString NewStr);
 };
 
 #endif // EDIT_LINE_H

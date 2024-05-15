@@ -331,7 +331,8 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
     if ((index.data().toString().contains("line")==true)&&(index.data().toString().contains("lines")==false))
     {
         editLine->setModal(true);
-        editLine->exec();
+        editLine->open();
+        editLine->SetStr(index.data().toString());
     }
 }
 

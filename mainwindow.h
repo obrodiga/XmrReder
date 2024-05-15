@@ -13,6 +13,7 @@
 #include <struct.h>
 #include <QMessageBox>
 #include <QAbstractItemView>
+#include <QStringList>
 
 #include <filesaver.h>
 #include <edit_line.h>
