@@ -58,3 +58,39 @@ void edit_line::SetStr(QString NewStr)
         }
     }
 }
+
+void edit_line::on_pushButton_2_clicked()
+{
+    QDialog::close();
+}
+
+
+void edit_line::on_discasCange_clicked()
+{
+    QString temp, newLineValue="line ", KavStr;
+    QChar kav=34;
+    KavStr.push_back(kav);
+    temp=ui->lineType->text();
+    if (!temp.isEmpty())
+    {
+        newLineValue=newLineValue+"type="+KavStr+temp+KavStr;
+    }
+    temp=ui->linePort->text();
+    if (!temp.isEmpty())
+    {
+        newLineValue=newLineValue+" port="+KavStr+temp+KavStr;
+    }
+    temp=ui->lineAddress->text();
+    if (!temp.isEmpty())
+    {
+        newLineValue=newLineValue+" address="+KavStr+temp+KavStr;
+    }
+    temp=ui->lineBodrei->text();
+    if (!temp.isEmpty())
+    {
+        newLineValue=newLineValue+" baudrate="+KavStr+temp+KavStr;
+    }
+    ui->label->setText(newLineValue);
+    //QDialog::close();
+}
+

@@ -20,6 +20,9 @@ private:
 
 public slots:
     void SetStr(QString NewStr);
+private slots:
+    void on_pushButton_2_clicked();
+    void on_discasCange_clicked();
 };
 
 #endif // EDIT_LINE_H
