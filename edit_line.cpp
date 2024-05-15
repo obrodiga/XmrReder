@@ -18,7 +18,7 @@ void edit_line::SetStr(QString NewStr)
 {
     QString s, type, address;
     QStringList list;
-    list=NewStr.split(',');
+    list=NewStr.split(' ');
 
     for (int i=0; i<list.size();i++)
     {
@@ -38,18 +38,22 @@ void edit_line::SetStr(QString NewStr)
         if (s.contains("port")==true)
         {
             s=s.remove("port=");
-            //s.remove(0, 1);
-            //s.remove((s.size()-1), 1);
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
             ui->linePort->setText(s);
         }
         if (s.contains("address")==true)
         {
             s=s.remove("address=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
             ui->lineAddress->setText(s);
         }
         if (s.contains("baudrate")==true)
         {
             s=s.remove("baudrate=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
             ui->lineBodrei->setText(s);
         }
     }
