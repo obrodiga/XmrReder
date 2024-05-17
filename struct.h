@@ -15,10 +15,7 @@ struct Line
     int baudrate;
 };
 
-struct Lines
-{
-    vector<Line> m_lines;
-};
+typedef vector<Line> Lines;
 
 struct Object
 {
@@ -31,23 +28,17 @@ struct LogicalDevice
 {
     int address;
     int module;
-    vector<Object> m_object;
+    vector<Object> Object;
 };
 
-struct LogicalDevices
-{
-    vector<LogicalDevice> m_logicaldevaice;
-};
+typedef vector<LogicalDevice> LogicalDevices;
 
 struct Server
 {
     Lines m_lines;
-    LogicalDevices m_devaices;
+    LogicalDevices Devaices;
 };
 
-struct Servers
-{
-    vector<Server> m_Servers;
-};
+typedef vector<Server> Servers;
 
 #endif // STRUCT_H
