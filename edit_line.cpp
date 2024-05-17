@@ -92,6 +92,6 @@ void edit_line::on_discasCange_clicked()
     }
     ui->label->setText(newLineValue);
     emit newLine(newLineValue);
-    //QDialog::close();
+    QDialog::close();
 }
 

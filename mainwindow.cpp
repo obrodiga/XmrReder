@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     editLine=new edit_line;
     connect(ui->treeWidget, &QAbstractItemView::doubleClicked, this, &MainWindow::twoDoubleClicked);
     connect(editLine, &edit_line::newLine, this, &MainWindow::newTypeString);
+    ui->templ->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -332,16 +333,31 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
     if ((index.data().toString().contains("line")==true)&&(index.data().toString().contains("lines")==false))
     {
         editLine->setModal(true);
-        editLine->open();
         editLine->SetStr(index.data().toString());
+        editLine->exec();
+    }
+    QString newTypeString=ui->templ->text();
+    if (newTypeString!="HIDE")
+    {
+        QString data=ui->textEdit->toPlainText();
+        int index1, index2;
+        index1=data.indexOf(index.data().toString(), index1=0);
+        index2=data.indexOf(">", index1);
+        data.replace(index1, index2-index1, newTypeString);
+        ui->textEdit->setText(data);
+        ui->textBrowser->append(newTypeString);
+        //datareplace()
     }
 }
 
 void MainWindow::newTypeString(QString TypeLine)
 {
-    ui->textBrowser->append(TypeLine);
+    ui->templ->setText("HIDE");
+    if (!TypeLine.isEmpty())
+    {
+        ui->templ->setText(TypeLine);
+    }
 }
-
 
 void MainWindow::on_gideButton_triggered()
 {
