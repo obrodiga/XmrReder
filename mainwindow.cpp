@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
     editLine=new edit_line;
     connect(ui->treeWidget, &QAbstractItemView::doubleClicked, this, &MainWindow::twoDoubleClicked);
     connect(editLine, &edit_line::newLine, this, &MainWindow::newTypeString);
-    ui->templ->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -336,26 +335,21 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
         editLine->SetStr(index.data().toString());
         editLine->exec();
     }
-    QString newTypeString=ui->templ->text();
-    if (newTypeString!="HIDE")
-    {
-        QString data=ui->textEdit->toPlainText();
-        int index1, index2;
-        index1=data.indexOf(index.data().toString(), index1=0);
-        index2=data.indexOf(">", index1);
-        data.replace(index1, index2-index1, newTypeString);
-        ui->textEdit->setText(data);
-        ui->textBrowser->append(newTypeString);
-        //datareplace()
-    }
+    QString newTypeString=ui->textBrowser->toPlainText();//взять новую переданную строку
+    QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
+    int index1, index2;
+    index1=data.indexOf(index.data().toString(), index1=0);//начало строки которую заменить
+    index2=data.indexOf(">", index1);//конец строки которую заменить
+    data.replace(index1, index2-index1, newTypeString);
+    ui->textEdit->setText(data);
+    ui->textBrowser->clear();
 }
 
 void MainWindow::newTypeString(QString TypeLine)
 {
-    ui->templ->setText("HIDE");
     if (!TypeLine.isEmpty())
     {
-        ui->templ->setText(TypeLine);
+        ui->textBrowser->setText(TypeLine);
     }
 }
 
@@ -364,7 +358,7 @@ void MainWindow::on_gideButton_triggered()
     QFile file(":/info/guid.txt");
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        ui->textBrowser->setPlainText("Не удалось открыть файл 'Руководство по использованию программы'");
+        ui->textBrowser->setPlainText("Не удалось открыть файл 'Руководство по использованию программы'");        
     }
     else
     {
