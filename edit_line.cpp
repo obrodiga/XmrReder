@@ -7,6 +7,10 @@ edit_line::edit_line(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Редактирование парметров");
+    ui->line1->clear();
+    ui->line2->clear();
+    ui->line3->clear();
+    ui->line4->clear();
 }
 
 edit_line::~edit_line()
@@ -114,6 +118,48 @@ void edit_line::SetStr(QString NewStr)
             s.remove((s.size()-1), 1);
             ui->line4->setText(s);
         }
+        if (s.contains("address")==true)
+        {
+            s=s.remove("address=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
+            ui->line1->setText(s);
+        }
+        if (s.contains("module")==true)
+        {
+            s=s.remove("module=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
+            ui->line2->setText(s);
+        }
+        if (s.contains("module")==true)
+        {
+            s=s.remove("module=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
+            ui->line4->setText(s);
+        }
+        if (s.contains("class_id")==true)
+        {
+            s=s.remove("class_id=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
+            ui->line1->setText(s);
+        }
+        if (s.contains("logical_name")==true)
+        {
+            s=s.remove("logical_name=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
+            ui->line2->setText(s);
+        }
+        if (s.contains("data_source")==true)
+        {
+            s=s.remove("data_source=");
+            s.remove(0, 1);
+            s.remove((s.size()-1), 1);
+            ui->line3->setText(s);
+        }
     }
 }
 
@@ -125,28 +171,62 @@ void edit_line::on_pushButton_2_clicked()
 
 void edit_line::on_discasCange_clicked()
 {
-    QString temp, newLineValue="line ", KavStr;
+    QString temp, newLineValue, KavStr;
     QChar kav=34;
+    newLineValue=ui->EditName->text()+" ";
     KavStr.push_back(kav);
-    temp=ui->line3->text();
-    if (!temp.isEmpty())
+    if (ui->EditName->text()=="line")
     {
-        newLineValue=newLineValue+"type="+KavStr+temp+KavStr;
+        temp=ui->line3->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+"type="+KavStr+temp+KavStr;
+        }
+        temp=ui->line2->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+" port="+KavStr+temp+KavStr;
+        }
+        temp=ui->line1->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+" address="+KavStr+temp+KavStr;
+        }
+        temp=ui->line4->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+" baudrate="+KavStr+temp+KavStr;
+        }
     }
-    temp=ui->line2->text();
-    if (!temp.isEmpty())
+    if (ui->EditName->text()=="logical_device")
     {
-        newLineValue=newLineValue+" port="+KavStr+temp+KavStr;
+        temp=ui->line1->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+"address="+KavStr+temp+KavStr;
+        }
+        temp=ui->line2->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+" module="+KavStr+temp+KavStr;
+        }
     }
-    temp=ui->line1->text();
-    if (!temp.isEmpty())
+    if (ui->EditName->text()=="object")
     {
-        newLineValue=newLineValue+" address="+KavStr+temp+KavStr;
-    }
-    temp=ui->line4->text();
-    if (!temp.isEmpty())
-    {
-        newLineValue=newLineValue+" baudrate="+KavStr+temp+KavStr;
+        temp=ui->line1->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+"class_id="+KavStr+temp+KavStr;
+        }
+        temp=ui->line2->text();
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+" logical_name="+KavStr+temp+KavStr;
+        }
+        if (!temp.isEmpty())
+        {
+            newLineValue=newLineValue+" data_source="+KavStr+temp+KavStr;
+        }
     }
     emit newLine(newLineValue);
     QDialog::close();

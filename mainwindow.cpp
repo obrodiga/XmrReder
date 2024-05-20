@@ -329,7 +329,7 @@ void MainWindow::newFileFolder(QString FileFolder)
 
 void MainWindow::twoDoubleClicked(const QModelIndex &index)
 {
-    if ((index.data().toString().contains("line")==true)&&(index.data().toString().contains("lines")==false))
+    if ((index.data().toString().contains("line ")==true)||(index.data().toString().contains("logical_device ")==true)||(index.data().toString().contains("object ")==true))
     {
         ui->textBrowser->clear();
         editLine->setModal(true);
