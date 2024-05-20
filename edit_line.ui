@@ -13,19 +13,6 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>371</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Редактирование параметров линии</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
@@ -37,44 +24,44 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="label1">
       <property name="text">
        <string>Адрес</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineAddress"/>
+     <widget class="QLineEdit" name="line1"/>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="label_3">
+     <widget class="QLabel" name="label2">
       <property name="text">
        <string>Порт</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="linePort"/>
+     <widget class="QLineEdit" name="line2"/>
     </item>
     <item row="2" column="0">
-     <widget class="QLabel" name="label_4">
+     <widget class="QLabel" name="label3">
       <property name="text">
        <string>Тип</string>
       </property>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="lineType"/>
+     <widget class="QLineEdit" name="line3"/>
     </item>
     <item row="3" column="0">
-     <widget class="QLabel" name="label_5">
+     <widget class="QLabel" name="label4">
       <property name="text">
        <string>Бодрей</string>
       </property>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="lineBodrei"/>
+     <widget class="QLineEdit" name="line4"/>
     </item>
    </layout>
   </widget>
@@ -103,6 +90,38 @@
    <property name="text">
     <string>Отмена</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>371</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Редактирование параметров</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="EditName">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

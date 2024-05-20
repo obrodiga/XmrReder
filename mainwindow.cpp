@@ -331,22 +331,24 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
 {
     if ((index.data().toString().contains("line")==true)&&(index.data().toString().contains("lines")==false))
     {
+        ui->textBrowser->clear();
         editLine->setModal(true);
         editLine->SetStr(index.data().toString());
         editLine->exec();
     }
     QString newTypeString=ui->textBrowser->toPlainText();//взять новую переданную строку
-    QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
-    int index1, index2;
-    index1=data.indexOf(index.data().toString(), index1=0);//начало строки которую заменить
-    index2=data.indexOf(">", index1);//конец строки которую заменить
-    data.replace(index1, index2-index1, newTypeString);
-    ui->textEdit->setText(data);
-    ui->textBrowser->clear();
-    QString infoMasge;
-    infoMasge="String '"+index.data().toString()+"' swap to '"+newTypeString+"'";
-    ui->textBrowser->setText(infoMasge);
-
+    if (!newTypeString.isEmpty())
+    {
+        QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
+        int index1, index2;
+        index1=data.indexOf(index.data().toString(), index1=0);//начало строки которую заменить
+        index2=data.indexOf(">", index1);//конец строки которую заменить
+        data.replace(index1, index2-index1, newTypeString);
+        ui->textEdit->setText(data);
+        QString infoMasge;
+        infoMasge="String '"+index.data().toString()+"' swap to '"+newTypeString+"'";
+        ui->textBrowser->setText(infoMasge);
+    }
 }
 
 void MainWindow::newTypeString(QString TypeLine)
