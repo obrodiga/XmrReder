@@ -343,6 +343,10 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
     data.replace(index1, index2-index1, newTypeString);
     ui->textEdit->setText(data);
     ui->textBrowser->clear();
+    QString infoMasge;
+    infoMasge="String '"+index.data().toString()+"' swap to '"+newTypeString+"'";
+    ui->textBrowser->setText(infoMasge);
+
 }
 
 void MainWindow::newTypeString(QString TypeLine)
