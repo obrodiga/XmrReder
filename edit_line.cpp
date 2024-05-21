@@ -223,6 +223,7 @@ void edit_line::on_discasCange_clicked()
         {
             newLineValue=newLineValue+" logical_name="+KavStr+temp+KavStr;
         }
+        temp=ui->line3->text();
         if (!temp.isEmpty())
         {
             newLineValue=newLineValue+" data_source="+KavStr+temp+KavStr;
