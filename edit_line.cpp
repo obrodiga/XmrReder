@@ -25,10 +25,9 @@ void edit_line::SetStr(QString NewStr)
     list=NewStr.split(' ');
 
     s=list[0];
+    ui->EditName->setText(s);
     if (s.contains("line")==true)
     {
-        s=s.remove("line ");
-        ui->EditName->setText("line");
         ui->label1->setText("Адрес");
         ui->label1->setVisible(true);
         ui->line1->setVisible(true);
@@ -47,8 +46,6 @@ void edit_line::SetStr(QString NewStr)
     }
     if (s.contains("logical_device")==true)
     {
-        s=s.remove("logical_device ");
-        ui->EditName->setText("logical_device");
         ui->label1->setText("Адрес");
         ui->label1->setVisible(true);
         ui->line1->setVisible(true);
@@ -67,8 +64,6 @@ void edit_line::SetStr(QString NewStr)
     }
     if (s.contains("object")==true)
     {
-        s=s.remove("object ");
-        ui->EditName->setText("object");
         ui->label1->setText("ID");
         ui->label1->setVisible(true);
         ui->line1->setVisible(true);
@@ -85,6 +80,7 @@ void edit_line::SetStr(QString NewStr)
         ui->label4->setVisible(false);
         ui->line4->setVisible(false);
     }
+    list.removeFirst();
 
     for (int i=0; i<list.size();i++)
     {
@@ -175,7 +171,7 @@ void edit_line::on_discasCange_clicked()
     QChar kav=34;
     newLineValue=ui->EditName->text()+" ";
     KavStr.push_back(kav);
-    if (ui->EditName->text()=="line")
+    if (newLineValue.contains("line"))
     {
         temp=ui->line3->text();
         if (!temp.isEmpty())
@@ -198,7 +194,7 @@ void edit_line::on_discasCange_clicked()
             newLineValue=newLineValue+" baudrate="+KavStr+temp+KavStr;
         }
     }
-    if (ui->EditName->text()=="logical_device")
+    if (newLineValue.contains("logical_device"))
     {
         temp=ui->line1->text();
         if (!temp.isEmpty())
@@ -211,7 +207,7 @@ void edit_line::on_discasCange_clicked()
             newLineValue=newLineValue+" module="+KavStr+temp+KavStr;
         }
     }
-    if (ui->EditName->text()=="object")
+    if (newLineValue.contains("object"))
     {
         temp=ui->line1->text();
         if (!temp.isEmpty())
