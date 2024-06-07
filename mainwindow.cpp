@@ -329,33 +329,56 @@ void MainWindow::newFileFolder(QString FileFolder)
 
 void MainWindow::twoDoubleClicked(const QModelIndex &index)
 {
-    if ((index.data().toString().contains("line ")==true)||(index.data().toString().contains("logical_device ")==true)||(index.data().toString().contains("object ")==true))
+    QString oldStr=index.data().toString();
+    if ((oldStr.contains("line ")==true)||(oldStr.contains("logical_device ")==true)||(oldStr.contains("object ")==true))
     {
-        ui->textBrowser->clear();
         editLine->setModal(true);
-        editLine->SetStr(index.data().toString());
+        editLine->SetStr(oldStr);
         editLine->exec();
-    }
-    QString newTypeString=ui->textBrowser->toPlainText();//взять новую переданную строку
-    if (!newTypeString.isEmpty())
-    {
-        QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
-        int index1, index2;
-        index1=data.indexOf(index.data().toString(), index1=0);//начало строки которую заменить
-        index2=data.indexOf(">", index1);//конец строки которую заменить
-        data.replace(index1, index2-index1, newTypeString);
-        ui->textEdit->setText(data);
-        QString infoMasge;
-        infoMasge="String '"+index.data().toString()+"' swap to '"+newTypeString+"'";
-        ui->textBrowser->setText(infoMasge);
     }
 }
 
-void MainWindow::newTypeString(QString TypeLine)
+void MainWindow::newTypeString(QString OldLn, QString NewLn)
 {
-    if (!TypeLine.isEmpty())
+    ui->textBrowser->setText(NewLn);
+    int ServersCount = 0;
+    if (!NewLn.isEmpty())
     {
-        ui->textBrowser->setText(TypeLine);
+        ServersCount=ui->treeWidget->topLevelItem(0)->childCount();
+        for (int i=0; i<ServersCount;i++)
+        {
+            QTreeWidgetItem* ptrServerItem=ui->treeWidget->topLevelItem(0)->child(i);
+            int ServerObjectsCount=ptrServerItem->childCount();
+            for (int j=0; j<ServerObjectsCount;j++)
+            {
+                QTreeWidgetItem* ptrServerObgectItem=ptrServerItem->child(j);
+                if (ptrServerObgectItem->text(0).contains("lines"))
+                {
+                    int LineCount=ptrServerObgectItem->childCount();
+                    for (int k=0;k<LineCount;k++)
+                    {
+                        if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                        {
+                            ptrServerObgectItem->child(k)->setText(0, NewLn);
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+    if (!NewLn.isEmpty())
+    {
+        QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
+        int index1, index2;
+        index1=data.indexOf(OldLn, index1=0);//начало строки которую заменить
+        index2=data.indexOf(">", index1);//конец строки которую заменить
+        data.replace(index1, index2-index1, NewLn);
+        ui->textEdit->setText(data);
+        QString infoMasge;
+        infoMasge="String '"+OldLn+"' swap to '"+NewLn+"'";
+        ui->textBrowser->setText(infoMasge);
     }
 }
 

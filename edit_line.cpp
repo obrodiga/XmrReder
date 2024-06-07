@@ -21,6 +21,7 @@ edit_line::~edit_line()
 void edit_line::SetStr(QString NewStr)
 {
     QString s;
+    OldLine = NewStr;
     QStringList list;
     list=NewStr.split(' ');
 
@@ -225,7 +226,7 @@ void edit_line::on_discasCange_clicked()
             newLineValue=newLineValue+" data_source="+KavStr+temp+KavStr;
         }
     }
-    emit newLine(newLineValue);
+    emit newLine(OldLine, newLineValue);
     QDialog::close();
 }
 
