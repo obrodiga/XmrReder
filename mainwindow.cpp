@@ -340,11 +340,9 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
 
 void MainWindow::newTypeString(QString OldLn, QString NewLn)
 {
-    ui->textBrowser->setText(NewLn);
-    int ServersCount = 0;
     if (!NewLn.isEmpty())
     {
-        ServersCount=ui->treeWidget->topLevelItem(0)->childCount();
+        int ServersCount=ui->treeWidget->topLevelItem(0)->childCount();
         for (int i=0; i<ServersCount;i++)
         {
             QTreeWidgetItem* ptrServerItem=ui->treeWidget->topLevelItem(0)->child(i);
@@ -352,20 +350,55 @@ void MainWindow::newTypeString(QString OldLn, QString NewLn)
             for (int j=0; j<ServerObjectsCount;j++)
             {
                 QTreeWidgetItem* ptrServerObgectItem=ptrServerItem->child(j);
-                if (ptrServerObgectItem->text(0).contains("lines"))
+                if (NewLn.contains("line"))
                 {
-                    int LineCount=ptrServerObgectItem->childCount();
-                    for (int k=0;k<LineCount;k++)
+                    if (ptrServerObgectItem->text(0).contains("lines"))
                     {
-                        if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                        int LineCount=ptrServerObgectItem->childCount();
+                        for (int k=0;k<LineCount;k++)
                         {
-                            ptrServerObgectItem->child(k)->setText(0, NewLn);
-                        }
+                            if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                            {
+                                ptrServerObgectItem->child(k)->setText(0, NewLn);
+                            }
 
+                        }
+                    }
+                }
+                if (NewLn.contains("logical_device")||(NewLn.contains("object")))
+                {
+                    if (ptrServerObgectItem->text(0).contains("logical_devices"))
+                    {
+                        int LineDevCount=ptrServerObgectItem->childCount();
+                        if (NewLn.contains("logical_device"))
+                        {
+                            for (int k=0;k<LineDevCount;k++)
+                            {
+                                if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                                {
+                                    ptrServerObgectItem->child(k)->setText(0, NewLn);
+                                }
+                            }
+                        }
+                        if (NewLn.contains("object"))
+                        {
+                            for (int k=0;k<LineDevCount;k++)
+                            {
+                                QTreeWidgetItem* ptrServerObgectsItem=ptrServerObgectItem->child(k);
+                                int objectsCount=ptrServerObgectsItem->childCount();
+                                for (int l=0;l<objectsCount;l++)
+                                {
+
+                                    if (ptrServerObgectsItem->child(l)->text(0)==OldLn)
+                                    {
+                                        ptrServerObgectsItem->child(l)->setText(0, NewLn);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-
         }
     }
     if (!NewLn.isEmpty())
@@ -387,7 +420,7 @@ void MainWindow::on_gideButton_triggered()
     QFile file(":/info/guid.txt");
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        ui->textBrowser->setPlainText("Не удалось открыть файл 'Руководство по использованию программы'");        
+        ui->textBrowser->setPlainText("Не удалось открыть файл 'Руководство по использованию программы'");
     }
     else
     {
