@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Построение дерева тегов");
+    this->setWindowTitle("Программа для редактирования конфигурационного файла");
     fileSaver = new filesaver;
     connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
     editLine=new edit_line;
@@ -157,6 +157,13 @@ void MainWindow::on_FileOpen_clicked()
         QXmlStreamAttributes attrib;
         XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
         XmlReader.readNext();
+
+        int temp;
+        QString nameFile, infoString="Открыт файл ";
+        temp=FileName.lastIndexOf("/");
+        nameFile=FileName.right(FileName.size()-temp-1);
+        infoString+=nameFile;
+        ui->textBrowser->setText(infoString);
 
         while (!XmlReader.atEnd())
         {
