@@ -239,8 +239,6 @@ void MainWindow::on_FileOpen_clicked()
 void MainWindow::on_FileSave_clicked()
 {
     QString FileName;
-
-    fileSaver->setModal(true);
     fileSaver->exec();
     FileName = (ui->FileFolder->text());
     QFile fileWrite(FileName);
@@ -339,7 +337,6 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
     QString oldStr=index.data().toString();
     if ((oldStr.contains("line ")==true)||(oldStr.contains("logical_device ")==true)||(oldStr.contains("object ")==true))
     {
-        editLine->setModal(true);
         editLine->SetStr(oldStr);
         editLine->exec();
     }
@@ -347,7 +344,7 @@ void MainWindow::twoDoubleClicked(const QModelIndex &index)
 
 void MainWindow::newTypeString(QString OldLn, QString NewLn)
 {
-    if (!NewLn.isEmpty())
+    if ((!NewLn.isEmpty())&&(NewLn!=OldLn))
     {
         int ServersCount=ui->treeWidget->topLevelItem(0)->childCount();
         for (int i=0; i<ServersCount;i++)
@@ -408,7 +405,7 @@ void MainWindow::newTypeString(QString OldLn, QString NewLn)
             }
         }
     }
-    if (!NewLn.isEmpty())
+    if ((!NewLn.isEmpty())&&(NewLn!=OldLn))
     {
         QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
         int index1, index2;
