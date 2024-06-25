@@ -16,7 +16,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>60</x>
      <y>-10</y>
      <width>441</width>
      <height>71</height>
@@ -28,7 +28,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Сохранить файл в исходной деректории?</string>
+    <string>Заменить исходный файл?</string>
    </property>
   </widget>
   <widget class="QPushButton" name="noButton">

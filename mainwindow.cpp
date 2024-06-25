@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Построение дерева тегов");
+    this->setWindowTitle("Программа для редактирования конфигурационного файла");
     fileSaver = new filesaver;
     connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
     editLine=new edit_line;
@@ -158,6 +158,13 @@ void MainWindow::on_FileOpen_clicked()
         XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
         XmlReader.readNext();
 
+        int temp;
+        QString nameFile, infoString="Открыт файл ";
+        temp=FileName.lastIndexOf("/");
+        nameFile=FileName.right(FileName.size()-temp-1);
+        infoString+=nameFile;
+        ui->textBrowser->setText(infoString);
+
         while (!XmlReader.atEnd())
         {
             attrib = XmlReader.attributes();
@@ -232,8 +239,6 @@ void MainWindow::on_FileOpen_clicked()
 void MainWindow::on_FileSave_clicked()
 {
     QString FileName;
-
-    fileSaver->setModal(true);
     fileSaver->exec();
     FileName = (ui->FileFolder->text());
     QFile fileWrite(FileName);
@@ -329,19 +334,90 @@ void MainWindow::newFileFolder(QString FileFolder)
 
 void MainWindow::twoDoubleClicked(const QModelIndex &index)
 {
-    if ((index.data().toString().contains("line")==true)&&(index.data().toString().contains("lines")==false))
+    QString oldStr=index.data().toString();
+    if ((oldStr.contains("line ")==true)||(oldStr.contains("logical_device ")==true)||(oldStr.contains("object ")==true))
     {
-        editLine->setModal(true);
-        editLine->open();
-        editLine->SetStr(index.data().toString());
+        editLine->SetStr(oldStr);
+        editLine->exec();
     }
 }
 
-void MainWindow::newTypeString(QString TypeLine)
+void MainWindow::newTypeString(QString OldLn, QString NewLn)
 {
-    ui->textBrowser->append(TypeLine);
-}
+    if ((!NewLn.isEmpty())&&(NewLn!=OldLn))
+    {
+        int ServersCount=ui->treeWidget->topLevelItem(0)->childCount();
+        for (int i=0; i<ServersCount;i++)
+        {
+            QTreeWidgetItem* ptrServerItem=ui->treeWidget->topLevelItem(0)->child(i);
+            int ServerObjectsCount=ptrServerItem->childCount();
+            for (int j=0; j<ServerObjectsCount;j++)
+            {
+                QTreeWidgetItem* ptrServerObgectItem=ptrServerItem->child(j);
+                if (NewLn.contains("line"))
+                {
+                    if (ptrServerObgectItem->text(0).contains("lines"))
+                    {
+                        int LineCount=ptrServerObgectItem->childCount();
+                        for (int k=0;k<LineCount;k++)
+                        {
+                            if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                            {
+                                ptrServerObgectItem->child(k)->setText(0, NewLn);
+                            }
 
+                        }
+                    }
+                }
+                if (NewLn.contains("logical_device")||(NewLn.contains("object")))
+                {
+                    if (ptrServerObgectItem->text(0).contains("logical_devices"))
+                    {
+                        int LineDevCount=ptrServerObgectItem->childCount();
+                        if (NewLn.contains("logical_device"))
+                        {
+                            for (int k=0;k<LineDevCount;k++)
+                            {
+                                if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                                {
+                                    ptrServerObgectItem->child(k)->setText(0, NewLn);
+                                }
+                            }
+                        }
+                        if (NewLn.contains("object"))
+                        {
+                            for (int k=0;k<LineDevCount;k++)
+                            {
+                                QTreeWidgetItem* ptrServerObgectsItem=ptrServerObgectItem->child(k);
+                                int objectsCount=ptrServerObgectsItem->childCount();
+                                for (int l=0;l<objectsCount;l++)
+                                {
+
+                                    if (ptrServerObgectsItem->child(l)->text(0)==OldLn)
+                                    {
+                                        ptrServerObgectsItem->child(l)->setText(0, NewLn);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if ((!NewLn.isEmpty())&&(NewLn!=OldLn))
+    {
+        QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
+        int index1, index2;
+        index1=data.indexOf(OldLn, index1=0);//начало строки которую заменить
+        index2=data.indexOf(">", index1);//конец строки которую заменить
+        data.replace(index1, index2-index1, NewLn);
+        ui->textEdit->setText(data);
+        QString infoMasge;
+        infoMasge="String '"+OldLn+"' swap to '"+NewLn+"'";
+        ui->textBrowser->setText(infoMasge);
+    }
+}
 
 void MainWindow::on_gideButton_triggered()
 {

@@ -17,12 +17,13 @@ public:
 
 private:
     Ui::edit_line *ui;
+    QString OldLine;
 
 public slots:
     void SetStr(QString NewStr);
 
 signals:
-    void newLine(QString);
+    void newLine(QString OldLine, QString NewLine);
 
 private slots:
     void on_pushButton_2_clicked();
