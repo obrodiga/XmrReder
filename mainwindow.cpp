@@ -6,6 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Программа для редактирования конфигурационного файла");
+    fileSaver = new filesaver;
+    connect(fileSaver, &filesaver::newFileName, this, &MainWindow::newFileFolder);
+    editLine=new edit_line;
+    connect(ui->treeWidget, &QAbstractItemView::doubleClicked, this, &MainWindow::twoDoubleClicked);
+    connect(editLine, &edit_line::newLine, this, &MainWindow::newTypeString);
 }
 
 MainWindow::~MainWindow()
@@ -13,93 +19,68 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-QString AtributRead (QXmlStreamAttributes elementAtrib, QString nameElement)
+QString AtributRead(QXmlStreamAttributes elementAtrib, QString nameElement)
 {
-    QString TempStr;
-    QChar kav=34;
+    QChar kav = 34;
+    QString TempStr, KavStr;
+    KavStr.clear();
+    KavStr.push_back(kav);
     TempStr.clear();
-    if (nameElement=="logical_device")
+    if (nameElement == "logical_device")
     {
-        if(elementAtrib.hasAttribute("address"))
+        if (elementAtrib.hasAttribute("address"))
         {
-            TempStr="address=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("address").toString();
-            TempStr.push_back(kav);
+            TempStr = "address="+ KavStr+ elementAtrib.value("address").toString()+KavStr;
         }
         if (elementAtrib.hasAttribute("module"))
         {
-            TempStr=TempStr+" module=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("module").toString();
-            TempStr.push_back(kav);
+            TempStr = TempStr + " module="+KavStr + elementAtrib.value("module").toString() + KavStr;
         }
-        if (TempStr!=NULL)
+        if (TempStr != NULL)
         {
-            TempStr="logical_device "+TempStr;
+            TempStr = "logical_device " + TempStr;
         }
     }
-    if (nameElement=="line")
+    if (nameElement == "line")
     {
-        if(elementAtrib.hasAttribute("type"))
+        if (elementAtrib.hasAttribute("type"))
         {
-            TempStr="type=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("type").toString();
-            TempStr.push_back(kav);
+            TempStr = "type="+KavStr + elementAtrib.value("type").toString() + KavStr;
         }
         if (elementAtrib.hasAttribute("port"))
         {
-            TempStr=TempStr+" port=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("port").toString();
-            TempStr.push_back(kav);
+            TempStr = TempStr + " port=" + KavStr + elementAtrib.value("port").toString() + KavStr;
         }
         if (elementAtrib.hasAttribute("address"))
         {
-            TempStr=TempStr+" address=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("address").toString();
-            TempStr.push_back(kav);
+            TempStr = TempStr + " address="+KavStr + elementAtrib.value("address").toString() + KavStr;
         }
         if (elementAtrib.hasAttribute("baudrate"))
         {
-            TempStr=TempStr+" baudrate=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("baudrate").toString();
-            TempStr.push_back(kav);
+            TempStr = TempStr + " baudrate="+KavStr + elementAtrib.value("baudrate").toString() + KavStr;
         }
-        if (TempStr!=NULL)
+        if (TempStr != NULL)
         {
-            TempStr="line "+TempStr;
+            TempStr = "line " + TempStr;
         }
     }
-    if (nameElement=="object")
+    if (nameElement == "object")
     {
-        if(elementAtrib.hasAttribute("class_id"))
+        if (elementAtrib.hasAttribute("class_id"))
         {
-            TempStr="class_id=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("class_id").toString();
-            TempStr.push_back(kav);
+            TempStr = "class_id=" + KavStr + elementAtrib.value("class_id").toString() + KavStr;
         }
         if (elementAtrib.hasAttribute("logical_name"))
         {
-            TempStr=TempStr+" logical_name=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("logical_name").toString();
-            TempStr.push_back(kav);
+            TempStr = TempStr + " logical_name=" + KavStr + elementAtrib.value("logical_name").toString() + KavStr;
         }
         if (elementAtrib.hasAttribute("data_source"))
         {
-            TempStr=TempStr+" data_source=";
-            TempStr.push_back(kav);
-            TempStr+=elementAtrib.value("data_source").toString();
-            TempStr.push_back(kav);
+            TempStr = TempStr + " data_source="+ KavStr + elementAtrib.value("data_source").toString() + KavStr;
         }
-        if (TempStr!=NULL)
+        if (TempStr != NULL)
         {
-            TempStr="object "+TempStr;
+            TempStr = "object " + TempStr;
         }
     }
     return TempStr;
@@ -111,7 +92,7 @@ void MainWindow::on_pushButton_clicked()
     XmlReader.addData(ui->textEdit->toPlainText());//получение введённых данных
     QStack<QTreeWidgetItem*> StackTags; //список элементов для создания иерархии
     QXmlStreamAttributes attrib;
-    QString TempStr;
+    QString TempStr, nameElement;
 
     ui->treeWidget->clear();//очистка поля для вывода тегов
     ui->textBrowser->clear();
@@ -119,19 +100,20 @@ void MainWindow::on_pushButton_clicked()
     XmlReader.readNext();
     while (!XmlReader.atEnd())//перебор всех элеменов
     {
-        attrib=XmlReader.attributes();
+        attrib = XmlReader.attributes();
         TempStr.clear();
-        TempStr=AtributRead(attrib, XmlReader.name().toString());
-        if (TempStr==NULL)
+        nameElement = XmlReader.name().toString();
+        TempStr = AtributRead(attrib, nameElement);
+        if (TempStr == NULL)
         {
-            TempStr=XmlReader.name().toString();
+            TempStr = nameElement;
         }
         if (XmlReader.isStartElement())//проверка на открывающий элемент
         {
             QStringList Tags;
-            Tags<<TempStr;//получение имени текущего элемента
+            Tags << TempStr;//получение имени текущего элемента
             QTreeWidgetItem* item = new QTreeWidgetItem(Tags); //создание элементов для последующего добавления в дерево
-            if (StackTags.count()==0)
+            if (StackTags.count() == 0)
             {
                 ui->treeWidget->addTopLevelItem(item);//добавление корневых элементов в дерево
             }
@@ -155,103 +137,116 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_FileOpen_clicked()
 {
-    bool Check=ui->checkBox->checkState();
-    if (Check)
+    int itemCount = 0;
+    QString FileName;
+    FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
+    ui->FileFolder->setText(FileName);
+    QFile file(FileName);
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        int itemCount=0;
-        QString FileName;
-        FileName = QFileDialog::getOpenFileName(this, tr("Open XML File"), "", tr("XML file (*.xml)"));
-        ui->FileFolder->setText(FileName);
-        QFile file(ui->FileFolder->text());
-        ui->textEdit->clear();
-
-        if (!file.open(QFile::ReadOnly | QFile::Text))
-        {
-            ui->textBrowser->setPlainText("Не удалось открыть файл");
-        }
-        else
-        {
-            ui->treeWidget->clear();
-            ui->textEdit->clear();
-            QStack<QTreeWidgetItem*> StackTags;
-            QXmlStreamReader XmlReader;
-            QString TempStr;
-            QXmlStreamAttributes attrib;
-            XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
-            XmlReader.readNext();
-
-            while (!XmlReader.atEnd())
-            {
-                attrib=XmlReader.attributes();
-                TempStr.clear();
-                TempStr=AtributRead(attrib, XmlReader.name().toString());
-                if (TempStr.isEmpty())
-                {
-                    TempStr=XmlReader.name().toString();
-                }
-                ui->textBrowser->append(TempStr);
-
-                if (XmlReader.isStartElement())
-                {
-                    itemCount++;
-                    QStringList Tags;
-                    Tags<<TempStr;
-                    QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
-
-                    if (StackTags.count()==0)
-                    {
-                        ui->treeWidget->addTopLevelItem(item);
-                    }
-                    else
-                    {
-                        StackTags.top()->addChild(item);
-                    }
-                    StackTags.push_back(item);
-                    TempStr="<"+TempStr;
-                    for (int i=0; i<itemCount;i++)
-                    {
-                        TempStr="   "+TempStr;
-                    }
-                    TempStr+=">";
-                    ui->textEdit->append(TempStr);
-                }
-                if (XmlReader.isEndElement())
-                {
-                    StackTags.pop();//уадление верхнего элемнета из стека
-                    TempStr="</"+TempStr;
-                    for (int i=0; i<itemCount;i++)
-                    {
-                        TempStr="   "+TempStr;
-                    }
-                    TempStr+=">";
-                    ui->textEdit->append(TempStr);
-                    itemCount--;
-                }
-                XmlReader.readNext();//переход к следующему элементу
-            }
-            if (XmlReader.hasError())
-            {
-                ui->textBrowser->append(XmlReader.errorString());//вывод ошибки
-            }
-        }
+        ui->textBrowser->setPlainText("Не удалось открыть файл");
     }
     else
     {
-        ui->FileFolder->clear();
-        ui->FileFolder->setText("Для использования локальных файлов отметьте данную настройку");
+        ui->treeWidget->clear();
+        ui->textEdit->clear();
+        QStack<QTreeWidgetItem*> StackTags;
+        QXmlStreamReader XmlReader;
+        QString TempStr, nameElement;
+        QXmlStreamAttributes attrib;
+        XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
+        XmlReader.readNext();
+        int temp;
+        QString nameFile, infoString="Открыт файл ";
+        temp=FileName.lastIndexOf("/");
+        nameFile=FileName.right(FileName.size()-temp-1);
+        infoString+=nameFile;
+        ui->textBrowser->setText(infoString);
+
+        while (!XmlReader.atEnd())
+        {
+            attrib = XmlReader.attributes();
+            TempStr.clear();
+            nameElement = XmlReader.name().toString();
+            TempStr = AtributRead(attrib, nameElement);
+            if (TempStr.isEmpty())
+            {
+                TempStr = nameElement;
+            }
+
+            if (XmlReader.isStartElement())
+            {
+                itemCount++;
+                QStringList Tags;
+                Tags << TempStr;
+                QTreeWidgetItem* item = new QTreeWidgetItem(Tags);
+
+                if (StackTags.count() == 0)
+                {
+                    ui->treeWidget->addTopLevelItem(item);
+                    Server NewServer;
+                    m_servers.push_back(NewServer);
+                }
+                else
+                {
+                    StackTags.top()->addChild(item);
+                    if (nameElement == "server")
+                    {
+                        m_lastserver = m_servers[m_servers.size() - 1];
+                    }
+                    if (nameElement == "lines")
+                    {
+                        Line NewLine;
+                        m_lastserver.m_lines.push_back(NewLine);
+                    }
+                    if (nameElement == "logical_devices")
+                    {
+                        LogicalDevice newLDevice;
+                        m_lastserver.Devaices.push_back(newLDevice);
+                    }
+                }
+                StackTags.push_back(item);
+                TempStr = "<" + TempStr + ">";
+                for (int i = 0; i < itemCount; i++)
+                {
+                    TempStr = "   " + TempStr;
+                }
+                ui->textEdit->append(TempStr);
+            }
+            if (XmlReader.isEndElement())
+            {
+                StackTags.pop();//уадление верхнего элемнета из стека
+                TempStr = "</" + TempStr + ">";
+                for (int i = 0; i < itemCount; i++)
+                {
+                    TempStr = "   " + TempStr;
+                }
+                ui->textEdit->append(TempStr);
+                itemCount--;
+            }
+            XmlReader.readNext();//переход к следующему элементу
+        }
+        if (XmlReader.hasError())
+        {
+            ui->textBrowser->append(XmlReader.errorString());//вывод ошибки
+        }
     }
 }
 
 
 void MainWindow::on_FileSave_clicked()
 {
-    QFile fileWrite(ui->FileFolder->text());
+    QString FileName;
+    fileSaver->exec();
+    FileName = (ui->FileFolder->text());
+    QFile fileWrite(FileName);
     QXmlStreamReader XmlReader;
     QXmlStreamAttributes atributs;
     QString string, nameElement, tempStringAN, tempStringAV;
 
     int index;
-    QChar kav=34;
+    QChar kav = 34;
 
     if (!fileWrite.open(QFile::WriteOnly))
     {
@@ -270,10 +265,10 @@ void MainWindow::on_FileSave_clicked()
         XmlReader.readNext();
         while (!XmlReader.atEnd())
         {
-            atributs=XmlReader.attributes();
-            nameElement=XmlReader.name().toString();
+            atributs = XmlReader.attributes();
+            nameElement = XmlReader.name().toString();
             string.clear();
-            string=AtributRead(atributs, nameElement);
+            string = AtributRead(atributs, nameElement);
             if (XmlReader.isStartElement())
             {
                 XmlWriter.writeStartElement(nameElement);
@@ -287,17 +282,12 @@ void MainWindow::on_FileSave_clicked()
                     {
                         tempStringAN.clear();
                         tempStringAV.clear();
-                        index=0;
-                        index = string.indexOf(kav, index);
-                        index--;
-                        tempStringAN = string.left(index);//сохраннение имя атрибута
-                        index+=2;
-                        string.remove(0, index);//удаление названия атрибута и открывающую '
-                        index=0;
-                        index = string.indexOf(kav, index);
+                        index = string.indexOf(kav, index = 0);
+                        tempStringAN = string.left(index = index - 1);//сохраннение имя атрибута
+                        string.remove(0, index = index + 2);//удаление названия атрибута и открывающую '
+                        index = string.indexOf(kav, index = 0);
                         tempStringAV = string.left(index);//сохранение значения атрибута
-                        index++;
-                        string.remove(0, index);//удаление значения атрибута
+                        string.remove(0, index = index + 1);//удаление значения атрибута
                         XmlWriter.writeAttribute(tempStringAN, tempStringAV);//записать атрибут и значение
                     }
                 }
@@ -313,5 +303,131 @@ void MainWindow::on_FileSave_clicked()
         {
             ui->textBrowser->setText(XmlReader.errorString());
         }
+    }
+}
+
+void MainWindow::on_closeButton_triggered()
+{
+    QApplication::quit();
+}
+
+
+void MainWindow::on_infoButton_triggered()
+{
+    QFile file(":/info/about.txt");
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        ui->textBrowser->setPlainText("Не удалось открыть файл 'Информация о разработчках'");
+    }
+    else
+    {
+        QByteArray data = file.readAll();
+        QMessageBox::about(this, "Информация о разработчках", data);
+    }
+}
+
+void MainWindow::newFileFolder(QString FileFolder)
+{
+    ui->FileFolder->setText(FileFolder);
+}
+
+void MainWindow::twoDoubleClicked(const QModelIndex &index)
+{
+    QString oldStr=index.data().toString();
+    if ((oldStr.contains("line ")==true)||(oldStr.contains("logical_device ")==true)||(oldStr.contains("object ")==true))
+    {
+        editLine->SetStr(oldStr);
+        editLine->exec();
+    }
+}
+
+void MainWindow::newTypeString(QString OldLn, QString NewLn)
+{
+    if ((!NewLn.isEmpty())&&(NewLn!=OldLn))
+    {
+        int ServersCount=ui->treeWidget->topLevelItem(0)->childCount();
+        for (int i=0; i<ServersCount;i++)
+        {
+            QTreeWidgetItem* ptrServerItem=ui->treeWidget->topLevelItem(0)->child(i);
+            int ServerObjectsCount=ptrServerItem->childCount();
+            for (int j=0; j<ServerObjectsCount;j++)
+            {
+                QTreeWidgetItem* ptrServerObgectItem=ptrServerItem->child(j);
+                if (NewLn.contains("line"))
+                {
+                    if (ptrServerObgectItem->text(0).contains("lines"))
+                    {
+                        int LineCount=ptrServerObgectItem->childCount();
+                        for (int k=0;k<LineCount;k++)
+                        {
+                            if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                            {
+                                ptrServerObgectItem->child(k)->setText(0, NewLn);
+                            }
+
+                        }
+                    }
+                }
+                if (NewLn.contains("logical_device")||(NewLn.contains("object")))
+                {
+                    if (ptrServerObgectItem->text(0).contains("logical_devices"))
+                    {
+                        int LineDevCount=ptrServerObgectItem->childCount();
+                        if (NewLn.contains("logical_device"))
+                        {
+                            for (int k=0;k<LineDevCount;k++)
+                            {
+                                if (ptrServerObgectItem->child(k)->text(0)==OldLn)
+                                {
+                                    ptrServerObgectItem->child(k)->setText(0, NewLn);
+                                }
+                            }
+                        }
+                        if (NewLn.contains("object"))
+                        {
+                            for (int k=0;k<LineDevCount;k++)
+                            {
+                                QTreeWidgetItem* ptrServerObgectsItem=ptrServerObgectItem->child(k);
+                                int objectsCount=ptrServerObgectsItem->childCount();
+                                for (int l=0;l<objectsCount;l++)
+                                {
+
+                                    if (ptrServerObgectsItem->child(l)->text(0)==OldLn)
+                                    {
+                                        ptrServerObgectsItem->child(l)->setText(0, NewLn);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if ((!NewLn.isEmpty())&&(NewLn!=OldLn))
+    {
+        QString data=ui->textEdit->toPlainText();//скопировать весь текст из дерева
+        int index1, index2;
+        index1=data.indexOf(OldLn, index1=0);//начало строки которую заменить
+        index2=data.indexOf(">", index1);//конец строки которую заменить
+        data.replace(index1, index2-index1, NewLn);
+        ui->textEdit->setText(data);
+        QString infoMasge;
+        infoMasge="String '"+OldLn+"' swap to '"+NewLn+"'";
+        ui->textBrowser->setText(infoMasge);
+    }
+}
+
+void MainWindow::on_gideButton_triggered()
+{
+    QFile file(":/info/guid.txt");
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        ui->textBrowser->setPlainText("Не удалось открыть файл 'Руководство по использованию программы'");
+    }
+    else
+    {
+        QByteArray data = file.readAll();
+        QMessageBox::information(this, "Руководство по использованию программы", data);
     }
 }

@@ -7,9 +7,16 @@
 #include <QXmlStreamAttributes>
 #include <QStack>
 #include <QTextBrowser>
-#include <QFileDialog>
 #include <QFile>
 #include <QVector>
+#include <QDebug>
+#include <struct.h>
+#include <QMessageBox>
+#include <QAbstractItemView>
+#include <QStringList>
+
+#include <filesaver.h>
+#include <edit_line.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +30,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    Servers m_servers;
+    Server m_lastserver;
+
+
 private slots:
     void on_pushButton_clicked();
 
@@ -30,7 +41,20 @@ private slots:
 
     void on_FileSave_clicked();
 
+    void on_closeButton_triggered();
+
+    void on_infoButton_triggered();
+
+    void on_gideButton_triggered();
+
 private:
     Ui::MainWindow *ui;
+    filesaver *fileSaver;
+    edit_line *editLine;
+
+public slots:
+    void newFileFolder(QString FileFolder);
+    void twoDoubleClicked(const QModelIndex &index);
+    void newTypeString(QString OldLn, QString NewLn);
 };
 #endif // MAINWINDOW_H
