@@ -157,7 +157,6 @@ void MainWindow::on_FileOpen_clicked()
         QXmlStreamAttributes attrib;
         XmlReader.setDevice(&file);//выставление файла откуда происходит чтение
         XmlReader.readNext();
-
         int temp;
         QString nameFile, infoString="Открыт файл ";
         temp=FileName.lastIndexOf("/");
